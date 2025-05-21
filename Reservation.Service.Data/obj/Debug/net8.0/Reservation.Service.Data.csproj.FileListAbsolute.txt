@@ -1,0 +1,17 @@
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.csproj.AssemblyReference.cache
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.AssemblyInfoInputs.cache
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.AssemblyInfo.cs
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.csproj.CoreCompileInputs.cache
+C:\DiplomaProject\Reservation.Service.Data\bin\Debug\net8.0\Reservation.Service.Data.deps.json
+C:\DiplomaProject\Reservation.Service.Data\bin\Debug\net8.0\Reservation.Service.Data.runtimeconfig.json
+C:\DiplomaProject\Reservation.Service.Data\bin\Debug\net8.0\Reservation.Service.Data.dll
+C:\DiplomaProject\Reservation.Service.Data\bin\Debug\net8.0\Reservation.Service.Data.pdb
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.dll
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\refint\Reservation.Service.Data.dll
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.pdb
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservation.Service.Data.genruntimeconfig.cache
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\ref\Reservation.Service.Data.dll
+C:\DiplomaProject\Reservation.Service.Data\bin\Debug\net8.0\Reservation.Service.Models.dll
+C:\DiplomaProject\Reservation.Service.Data\bin\Debug\net8.0\Reservation.Service.Models.pdb
+C:\DiplomaProject\Reservation.Service.Data\obj\Debug\net8.0\Reservat.1DC74719.Up2Date
