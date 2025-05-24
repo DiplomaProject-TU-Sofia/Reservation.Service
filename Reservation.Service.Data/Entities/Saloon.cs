@@ -17,6 +17,5 @@ namespace Reservation.Service.Data.Entities
 		//Navigation properties
 		public ICollection<SaloonWorker> SaloonWorkers { get; set; } = new List<SaloonWorker>();
 		public ICollection<WorkerService> WorkerServices { get; set; } = new List<WorkerService>();
-		public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 	}
 }

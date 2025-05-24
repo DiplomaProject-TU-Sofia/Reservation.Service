@@ -66,10 +66,10 @@ public class ReservationDbContext : DbContext
 				   .IsRequired(false);
 
 			builder.HasOne<Saloon>(r => r.Saloon)
-				   .WithMany(s => s.Reservations)
+				   .WithMany()
 				   .HasForeignKey(r => r.SaloonId)
 				   .OnDelete(DeleteBehavior.Restrict)
-					.IsRequired(false);
+				   .IsRequired(false);
 		});
 
 
