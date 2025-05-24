@@ -231,7 +231,6 @@ namespace Reservation.Service.Data.Repositories
 			if (saloonWorker == null)
 				throw new Exception("Worker does not work at this saloon.");
 
-			// New check: verify worker can do the service
 			var canDoService = await _context.WorkerServices.AnyAsync(ws =>
 				ws.UserId == workerId && ws.ServiceId == serviceId);
 
@@ -247,6 +246,7 @@ namespace Reservation.Service.Data.Repositories
 
 			var result = new List<AvailableTimeSlotsDto>();
 			var duration = service.Duration;
+			var step = TimeSpan.FromMinutes(15); // adjustable step
 
 			for (var date = from.Date; date <= to.Date; date = date.AddDays(1))
 			{
@@ -280,7 +280,7 @@ namespace Reservation.Service.Data.Repositories
 					if (!hasConflict)
 						slots.AvailableStartTimes.Add(current);
 
-					current = current.Add(TimeSpan.FromMinutes(30));
+					current = current.Add(step);
 				}
 
 				if (slots.AvailableStartTimes.Count != 0)
@@ -289,6 +289,7 @@ namespace Reservation.Service.Data.Repositories
 
 			return result;
 		}
+
 
 	}
 }
