@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Reservation.Service.Data.Repositories;
 using Reservation.Service.Models.User;
-using System.Security.Claims;
 
 namespace Reservation.Service.Controllers
 {
 	[Route("api/user-reservations")]
 	[ApiController]
 	[Authorize(Roles = "User")]
-	public class UserReservationsController(ReservationRepository reservationRepository) : ControllerBase
+	public class UserReservationsController(ReservationRepository reservationRepository) : BaseController
 	{
 		[HttpPost()]
 		public async Task<IActionResult> CreateReservationAsUser([FromBody] CreateUserReservationRequest request)
@@ -22,18 +21,8 @@ namespace Reservation.Service.Controllers
 			{
 				return BadRequest();
 			}
-
-			var userIdClaim = User.Claims.FirstOrDefault(c =>
-				c.Type == ClaimTypes.NameIdentifier ||
-				c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-
-			if (userIdClaim == null)
-			{
-				// Handle missing claim, e.g. return Unauthorized or throw
-				throw new Exception("User Id claim not found");
-			}
-
-			var userId = Guid.Parse(userIdClaim.Value);
+		
+			var userId = GetContextUserId();
 
 			try
 			{
@@ -50,17 +39,7 @@ namespace Reservation.Service.Controllers
 		[HttpGet()]
 		public async Task<IActionResult> GetUserReservations([FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null)
 		{
-			var userIdClaim = User.Claims.FirstOrDefault(c =>
-				c.Type == ClaimTypes.NameIdentifier ||
-				c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-
-			if (userIdClaim == null)
-			{
-				// Handle missing claim, e.g. return Unauthorized or throw
-				throw new Exception("User Id claim not found");
-			}
-
-			var userId = Guid.Parse(userIdClaim.Value);
+			var userId = GetContextUserId();
 
 			var reservations = await reservationRepository.GetUserReservationsAsync(userId, from, to);
 

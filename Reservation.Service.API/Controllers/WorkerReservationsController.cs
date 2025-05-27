@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Reservation.Service.Data.Repositories;
 using Reservation.Service.Models.Worker;
-using System.Security.Claims;
 
 namespace Reservation.Service.Controllers
 {
 	[Route("api/worker-reservations")]
 	[ApiController]
 	[AllowAnonymous]
-	public class WorkerReservationsController(ReservationRepository reservationRepository) : ControllerBase
+	public class WorkerReservationsController(ReservationRepository reservationRepository) : BaseController
 	{
 		[HttpPost]
 		public async Task<IActionResult> CreateBlockAsWorker([FromBody] CreateWorkerBlockRequest request)
@@ -21,17 +20,7 @@ namespace Reservation.Service.Controllers
 				return BadRequest();
 			}
 
-			var userIdClaim = User.Claims.FirstOrDefault(c =>
-				c.Type == ClaimTypes.NameIdentifier ||
-				c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-
-			if (userIdClaim == null)
-			{
-				// Handle missing claim, e.g. return Unauthorized or throw
-				throw new Exception("User Id claim not found");
-			}
-
-			var workerId = Guid.Parse(userIdClaim.Value);
+			var workerId = GetContextUserId();
 			
 			try
 			{
@@ -48,17 +37,7 @@ namespace Reservation.Service.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetWorkerReservations([FromQuery] DateTime? from, [FromQuery] DateTime? to)
 		{
-			var userIdClaim = User.Claims.FirstOrDefault(c =>
-				c.Type == ClaimTypes.NameIdentifier ||
-				c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-
-			if (userIdClaim == null)
-			{
-				// Handle missing claim, e.g. return Unauthorized or throw
-				throw new Exception("User Id claim not found");
-			}
-
-			var workerId = Guid.Parse(userIdClaim.Value);
+			var workerId = GetContextUserId();
 
 			var reservations = await reservationRepository.GetWorkerReservationsAsync(workerId, from, to);
 
