@@ -193,6 +193,7 @@ namespace Reservation.Service.Data.Repositories
 					Date = g.Key,
 					Reservations = g.Select(r => new WorkerReservationDto
 					{
+						Id = r.Id,
 						StartTime = r.StartTime,
 						EndTime = r.EndTime,
 						IsBlock = r.IsBlock,

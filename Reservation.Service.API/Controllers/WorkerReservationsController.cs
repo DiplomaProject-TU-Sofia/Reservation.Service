@@ -7,7 +7,6 @@ namespace Reservation.Service.Controllers
 {
 	[Route("api/worker-reservations")]
 	[ApiController]
-	[AllowAnonymous]
 	public class WorkerReservationsController(ReservationRepository reservationRepository) : BaseController
 	{
 		[HttpPost]
