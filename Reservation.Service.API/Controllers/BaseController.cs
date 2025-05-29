@@ -4,6 +4,7 @@ using System.Security.Claims;
 namespace Reservation.Service.Controllers
 {
 	[ApiController]
+	[Route("")]
 	public class BaseController : ControllerBase
 	{
 		public Guid GetContextUserId()
