@@ -196,14 +196,8 @@ namespace Reservation.Service.Data.Repositories
 						Id = r.Id,
 						StartTime = r.StartTime,
 						EndTime = r.EndTime,
-						IsBlock = r.IsBlock,
-						BlockTitle = r.IsBlock ? r.BlockTitle : null,
-						BlockDescription = r.IsBlock ? r.BlockDescription : null,
-						ClientFirstName = !r.IsBlock ? r.User?.FirstName : null,
-						ClientLastName = !r.IsBlock ? r.User?.LastName : null,
-						ServiceName = !r.IsBlock ? r.Service?.Name : null,
-						SaloonName = !r.IsBlock ? r.Saloon?.Name : null,
-						SaloonLocation = !r.IsBlock ? r.Saloon?.Location : null,
+						BlockTitle = r.IsBlock ? r.BlockTitle : r.Service!.Name,
+						BlockDescription = r.IsBlock ? r.BlockDescription : r.Saloon!.Name
 					}).ToList()
 				}).ToList();
 
