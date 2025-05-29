@@ -6,6 +6,7 @@ using Reservation.Service.Models.Worker;
 namespace Reservation.Service.Controllers
 {
 	[Route("api/worker-reservations")]
+	[Authorize(Roles = "Worker")]
 	[ApiController]
 	public class WorkerReservationsController(ReservationRepository reservationRepository) : BaseController
 	{
