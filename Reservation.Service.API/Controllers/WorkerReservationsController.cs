@@ -43,5 +43,30 @@ namespace Reservation.Service.Controllers
 
 			return Ok(reservations);
 		}
+
+		[HttpPut]
+		public async Task<IActionResult> UpdateReservation([FromBody] UpdateReservationModel updateReservation)
+		{
+			if(updateReservation.Id == default || updateReservation.StartTime == default || updateReservation == default)
+			{  
+				return BadRequest("Empty Id or StartTime/EndTime"); 
+			}
+
+			await reservationRepository.UpdateReservation(updateReservation);
+
+			return Ok();
+		}
+
+		[HttpDelete]
+		[Route("{reservationId}")]
+		public async Task<IActionResult> DeleteReservation(Guid reservationId)
+		{
+			if (reservationId == default)
+				return BadRequest("Cannot delete with empty reservationId");
+
+			await reservationRepository.DeleteReservation(reservationId);
+			
+			return Ok();
+		}
 	}
 }

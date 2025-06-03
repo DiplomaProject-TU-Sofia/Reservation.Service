@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Core;
+using Microsoft.EntityFrameworkCore;
+using Reservation.Service.Controllers;
+using Reservation.Service.Data.Entities;
 using Reservation.Service.Models;
 using Reservation.Service.Models.User;
 using Reservation.Service.Models.Worker;
@@ -285,6 +288,40 @@ namespace Reservation.Service.Data.Repositories
 			return result;
 		}
 
+		public async Task UpdateReservation(UpdateReservationModel updateReservation)
+		{
+			var reservation = await _context.Reservations
+				.FirstOrDefaultAsync(r => r.Id == updateReservation.Id);
+
+			if (reservation == null)
+				return;
+
+			if(updateReservation.StartTime < DateTime.UtcNow || updateReservation.StartTime > updateReservation.EndTime)
+				return;
+
+			// Check if the worker has any overlapping reservations
+			var conflictExists = await _context.Reservations.AnyAsync(r =>
+				r.WorkerId == reservation.WorkerId &&
+				((updateReservation.StartTime >= r.StartTime && updateReservation.StartTime < r.EndTime) ||   // starts during another reservation
+				 (updateReservation.EndTime > r.StartTime && updateReservation.EndTime <= r.EndTime) ||       // ends during another reservation
+				 (updateReservation.StartTime <= r.StartTime && updateReservation.EndTime >= r.EndTime))      // fully overlaps another reservation
+			);
+
+			if (conflictExists)
+				throw new Exception("The worker already has a reservation during the requested time.");
+		}
+
+		public async Task DeleteReservation(Guid reservationId)
+		{
+			var reservation = await _context.Reservations
+				.FirstOrDefaultAsync(r => r.Id == reservationId);
+
+			if (reservation == null)
+				return;
+
+			_context.Reservations.Remove(reservation);
+			await _context.SaveChangesAsync();
+		}
 
 	}
 }
