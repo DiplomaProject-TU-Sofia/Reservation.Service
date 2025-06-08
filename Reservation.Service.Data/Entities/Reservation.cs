@@ -25,5 +25,7 @@
 		public string? BlockTitle { get; set; }
 
 		public bool IsBlock { get; set; } = false;
+
+		public bool IsPaid { get; set; } = false;
 	}
 }

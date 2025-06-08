@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Reservation.Service.Data;
 using Reservation.Service.Data.Repositories;
+using Reservation.Service.Models.Payment;
+using Stripe;
 using System.Text;
 
 public class Startup
@@ -41,6 +43,10 @@ public class Startup
 				RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
 			};
 		});
+
+		services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+
+		StripeConfiguration.ApiKey = Configuration["Stripe:SecretKey"];
 
 		services.AddAuthorization();
 

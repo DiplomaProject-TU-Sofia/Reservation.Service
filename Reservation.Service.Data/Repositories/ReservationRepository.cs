@@ -14,19 +14,6 @@ namespace Reservation.Service.Data.Repositories
 			_context = context;
 		}
 
-		public async Task<IEnumerable<Entities.Reservation>> GetReservationsForWorkerAsync(Guid workerId, DateTime from, DateTime to)
-		{
-			return await _context.Reservations
-				.Where(r => r.WorkerId == workerId && r.StartTime >= from && r.StartTime < to)
-				.ToListAsync();
-		}
-
-		public async Task AddReservationAsync(Entities.Reservation reservation)
-		{
-			await _context.Reservations.AddAsync(reservation);
-			await _context.SaveChangesAsync();
-		}
-
 		public async Task<Entities.Reservation> GetReservationAsync(Guid reservationId)
 		{
 			return await _context.Reservations
@@ -34,16 +21,6 @@ namespace Reservation.Service.Data.Repositories
 				.Include(r => r.Service)
 				.Include(r => r.Saloon)
 				.FirstOrDefaultAsync(r => r.Id == reservationId);
-		}
-
-		public async Task<bool> IsWorkerAvailableAsync(Guid workerId, DateTime startTime, TimeSpan duration)
-		{
-			var endTime = startTime + duration;
-
-			return !await _context.Reservations.AnyAsync(r =>
-				r.WorkerId == workerId &&
-				r.StartTime < endTime &&
-				(r.StartTime + duration) > startTime);
 		}
 
 		public async Task<Guid> CreateUserReservationAsync(CreateUserReservationRequest request, Guid userId)
@@ -107,7 +84,6 @@ namespace Reservation.Service.Data.Repositories
 
 			return reservation.Id;
 		}
-
 
 		public async Task CreateWorkerBlockAsync(CreateWorkerBlockRequest request, Guid workerId)
 		{
@@ -304,7 +280,7 @@ namespace Reservation.Service.Data.Repositories
 			if (reservation == null)
 				return;
 
-			if(updateReservation.StartTime < DateTime.UtcNow || updateReservation.StartTime > updateReservation.EndTime)
+			if (updateReservation.StartTime < DateTime.UtcNow || updateReservation.StartTime > updateReservation.EndTime)
 				return;
 
 			// Check if the worker has any overlapping reservations
@@ -347,6 +323,19 @@ namespace Reservation.Service.Data.Repositories
 				.Include(r => r.Saloon)
 				.Where(r => r.StartTime >= tomorrow && r.StartTime < dayAfter && !r.IsBlock)
 				.ToListAsync();
+		}
+
+		public async Task UpdateReservationPaid(Guid reservationId)
+		{
+			var reservation = await _context.Reservations
+				.FirstOrDefaultAsync(r => r.Id == reservationId);
+
+			if (reservation == null)
+				return;
+
+			reservation.IsPaid = true;
+
+			await _context.SaveChangesAsync();
 		}
 	}
 }
