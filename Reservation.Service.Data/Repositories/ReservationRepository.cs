@@ -1,7 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.EntityFrameworkCore;
-using Reservation.Service.Controllers;
-using Reservation.Service.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using Reservation.Service.Models;
 using Reservation.Service.Models.User;
 using Reservation.Service.Models.Worker;
@@ -30,6 +27,15 @@ namespace Reservation.Service.Data.Repositories
 			await _context.SaveChangesAsync();
 		}
 
+		public async Task<Entities.Reservation> GetReservationAsync(Guid reservationId)
+		{
+			return await _context.Reservations
+				.Include(r => r.Worker)
+				.Include(r => r.Service)
+				.Include(r => r.Saloon)
+				.FirstOrDefaultAsync(r => r.Id == reservationId);
+		}
+
 		public async Task<bool> IsWorkerAvailableAsync(Guid workerId, DateTime startTime, TimeSpan duration)
 		{
 			var endTime = startTime + duration;
@@ -40,7 +46,7 @@ namespace Reservation.Service.Data.Repositories
 				(r.StartTime + duration) > startTime);
 		}
 
-		public async Task CreateUserReservationAsync(CreateUserReservationRequest request, Guid userId)
+		public async Task<Guid> CreateUserReservationAsync(CreateUserReservationRequest request, Guid userId)
 		{
 			var service = await _context.Services.FirstOrDefaultAsync(s => s.Id == request.ServiceId);
 			if (service == null)
@@ -98,6 +104,8 @@ namespace Reservation.Service.Data.Repositories
 
 			_context.Reservations.Add(reservation);
 			await _context.SaveChangesAsync();
+
+			return reservation.Id;
 		}
 
 
@@ -309,6 +317,11 @@ namespace Reservation.Service.Data.Repositories
 
 			if (conflictExists)
 				throw new Exception("The worker already has a reservation during the requested time.");
+
+			reservation.StartTime = updateReservation.StartTime;
+			reservation.EndTime = updateReservation.EndTime;
+
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task DeleteReservation(Guid reservationId)
@@ -323,5 +336,17 @@ namespace Reservation.Service.Data.Repositories
 			await _context.SaveChangesAsync();
 		}
 
+		public async Task<List<Entities.Reservation>> GetReservationsForNextDayAsync()
+		{
+			var tomorrow = DateTime.UtcNow.Date.AddDays(1);
+			var dayAfter = tomorrow.AddDays(1);
+
+			return await _context.Reservations
+				.Include(r => r.User)
+				.Include(r => r.Service)
+				.Include(r => r.Saloon)
+				.Where(r => r.StartTime >= tomorrow && r.StartTime < dayAfter && !r.IsBlock)
+				.ToListAsync();
+		}
 	}
 }

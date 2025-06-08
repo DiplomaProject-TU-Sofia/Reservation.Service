@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Azure.Messaging.ServiceBus;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Reservation.Service.Data;
@@ -44,6 +45,8 @@ public class Startup
 		services.AddAuthorization();
 
 		services.AddTransient<ReservationRepository>();
+		services.AddSingleton(_ =>
+				new ServiceBusClient(Configuration.GetConnectionString("ServiceBus")));
 
 		services.AddCors(options =>
 		{
