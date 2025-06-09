@@ -5,6 +5,7 @@ using Reservation.Service.Data.Repositories;
 using Reservation.Service.Models.Payment;
 using Reservation.Service.Models.User;
 using Stripe;
+using Stripe.Checkout;
 using System.Text.Json;
 
 namespace Reservation.Service.Controllers
@@ -81,27 +82,41 @@ namespace Reservation.Service.Controllers
 			return Ok(result);
 		}
 
-		[HttpPost("create-payment-intent")]
-		public ActionResult CreatePaymentIntent([FromBody] PaymentRequest request)
+		[HttpPost("create-checkout-session")]
+		public ActionResult CreateCheckoutSession([FromBody] PaymentRequest request)
 		{
-			var options = new PaymentIntentCreateOptions
+			var options = new SessionCreateOptions
 			{
-				Amount = (long)(request.Amount * 100),
-				Currency = "bgn",
-				AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+				PaymentMethodTypes = new List<string> { "card" },
+				LineItems = new List<SessionLineItemOptions>
+			{
+				new SessionLineItemOptions
 				{
-					Enabled = true,
+					PriceData = new SessionLineItemPriceDataOptions
+					{
+						Currency = "bgn",
+						UnitAmount = (long)(request.Amount * 100),
+						ProductData = new SessionLineItemPriceDataProductDataOptions
+						{
+							Name = "Reservation",
+						},
+					},
+					Quantity = 1,
 				},
+			},
+				Mode = "payment",
+				SuccessUrl = "http://localhost:3000/reservation/success",
+				CancelUrl = "http://localhost:3000/reservation/error",
 				Metadata = new Dictionary<string, string>
 				{
 					{ "reservationId", request.ReservationId.ToString() }
 				}
 			};
 
-			var service = new PaymentIntentService();
-			var intent = service.Create(options);
+			var service = new SessionService();
+			var session = service.Create(options);
 
-			return Ok(new { clientSecret = intent.ClientSecret });
+			return Ok(new { sessionId = session.Id });
 		}
 
 		[HttpPost("webhook")]
