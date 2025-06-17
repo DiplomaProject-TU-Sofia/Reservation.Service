@@ -119,6 +119,7 @@ namespace Reservation.Service.Controllers
 			return Ok(new { sessionId = session.Id });
 		}
 
+		[AllowAnonymous]
 		[HttpPost("webhook")]
 		public async Task<IActionResult> StripeWebhook()
 		{
@@ -132,11 +133,11 @@ namespace Reservation.Service.Controllers
 					configuration["Stripe:WebhookSecret"]
 				);
 
-				if (stripeEvent.Type == EventTypes.PaymentIntentSucceeded)
+				if (stripeEvent.Type == "checkout.session.completed")
 				{
-					var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
+					var session = (Session)stripeEvent.Data.Object;
 
-					if (paymentIntent.Metadata.TryGetValue("reservationId", out var reservationId))
+					if (session.Metadata.TryGetValue("reservationId", out var reservationId))
 					{
 						await reservationRepository.UpdateReservationPaid(Guid.Parse(reservationId));
 					}

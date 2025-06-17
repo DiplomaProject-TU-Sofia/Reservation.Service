@@ -29,6 +29,9 @@ namespace Reservation.Service.Data.Repositories
 			if (service == null)
 				throw new Exception($"Couldn't find any service with Id == {request.ServiceId}");
 
+			if(request.StartTime < DateTime.UtcNow)
+				throw new Exception($"StartTime must be in the future.");
+
 			var startTime = request.StartTime;
 			var endTime = startTime.Add(service.Duration);
 			var dayOfWeek = startTime.DayOfWeek;
