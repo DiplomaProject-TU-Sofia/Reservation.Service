@@ -10,7 +10,7 @@ COPY ["Reservation.Service.Data/Reservation.Service.Data.csproj", "Reservation.S
 COPY ["Reservation.Service.Models/Reservation.Service.Models.csproj", "Reservation.Service.Models/"]
 COPY ["DailyReminderFunction/DailyReminderFunction.csproj", "DailyReminderFunction/"]
 
-RUN dotnet restore "Reservation.Service.API/Reservation.Service.API.csproj"
+RUN dotnet restore "Reservation.Service.API/Reservation.Service.csproj"
 
 COPY . .
 
