@@ -5,7 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["Reservation.Service.API/Reservation.Service.API.csproj", "Reservation.Service.API/"]
+COPY ["Reservation.Service.API/Reservation.Service.csproj", "Reservation.Service.API/"]
 COPY ["Reservation.Service.Data/Reservation.Service.Data.csproj", "Reservation.Service.Data/"]
 COPY ["Reservation.Service.Models/Reservation.Service.Models.csproj", "Reservation.Service.Models/"]
 COPY ["DailyReminderFunction/DailyReminderFunction.csproj", "DailyReminderFunction/"]
