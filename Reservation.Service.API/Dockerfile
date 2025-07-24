@@ -26,4 +26,4 @@ WORKDIR /app
 
 COPY --from=publish /app/publish .
 
-ENTRYPOINT ["dotnet", "Reservation.Service.API.dll"]
+ENTRYPOINT ["dotnet", "Reservation.Service.dll"]
