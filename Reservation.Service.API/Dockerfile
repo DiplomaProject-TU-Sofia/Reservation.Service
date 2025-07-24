@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["Reservation.Service.API/Reservation.Service.API.csproj", "Reservation.Service.API/"]
 COPY ["Reservation.Service.Data/Reservation.Service.Data.csproj", "Reservation.Service.Data/"]
 COPY ["Reservation.Service.Models/Reservation.Service.Models.csproj", "Reservation.Service.Models/"]
-COPY ["DailyReminderFunction.csproj", "."]
+COPY ["DailyReminderFunction/DailyReminderFunction.csproj", "DailyReminderFunction/"]
 
 RUN dotnet restore "Reservation.Service.API/Reservation.Service.API.csproj"
 
