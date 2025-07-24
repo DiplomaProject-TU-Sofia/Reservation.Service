@@ -5,10 +5,10 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["Reservation.Service/Reservation.Service.API/Reservation.Service.API.csproj", "Reservation.Service/Reservation.Service.API/"]
-COPY ["Reservation.Service/Reservation.Service.Data/Reservation.Service.Data.csproj", "Reservation.Service/Reservation.Service.Data/"]
-COPY ["Reservation.Service/Reservation.Service.Models/Reservation.Service.Models.csproj", "Reservation.Service/Reservation.Service.Models/"]
-COPY ["Reservation.Service/DailyReminderFunction/DailyReminderFunction.csproj", "Reservation.Service/DailyReminderFunction/"]
+COPY ["Reservation.Service.API.csproj", "."]
+COPY ["Reservation.Service.Data.csproj", "."]
+COPY ["Reservation.Service.Models.csproj", "."]
+COPY ["DailyReminderFunction.csproj", "."]
 
 RUN dotnet restore "Reservation.Service/Reservation.Service.API/Reservation.Service.API.csproj"
 
