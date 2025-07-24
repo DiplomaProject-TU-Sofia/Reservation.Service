@@ -14,7 +14,7 @@ RUN dotnet restore "Reservation.Service.API/Reservation.Service.csproj"
 
 COPY . .
 
-WORKDIR "/src/Reservation.Service/Reservation.Service.API"
+WORKDIR "/src/Reservation.Service.API"
 
 RUN dotnet build "Reservation.Service.sln" -c Release -o /app/build
 
